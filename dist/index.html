@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport"
+        content="width=device-width,height=device-height, initial-scale=1, maximum-scale=1, user-scalable=0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="shortcut icon" type="image/x-icon" href="" />
+    <script src="./d3.v4.min.js"></script>
+    <script src="./bundle.js"></script>
+</head>
+
+<body>
+    <svg id="chart"></svg>
+    <script>
+        var config = {
+            topN: 15,
+            duration: 2000,
+            width: 800,
+            height: 600,
+            autoPlay: true,
+            fontFamily: "Segoe UI",
+            fontSize: 14,
+            hideGrid: false,
+            hideNumbers: false,
+            hidePeriod: false,
+            periodSize: 64,
+        }
+        var csvDataGlobal;
+        d3.csv('brand_data.csv', function (d, i) {
+            delete d.lastValue
+            delete d.rank
+            d.value = isNaN(d.value) ? 0 : d.value * 100
+            d.colour = d3.hsl(Math.random() * 360, 0.75, 0.75)
+            return d;
+        }, function (csvData) {
+            csvData = csvData.filter(d => {
+                return !d.year.match(/\./)
+            })
+            csvDataGlobal = csvData.splice(0, 300);
+            //csvDataGlobal = csvData
+            //constructPage(csvDataGlobal.filter(d => d.year == "2000"), config)
+            constructPage(csvDataGlobal, config)
+
+            setTimeout(function () {
+                //constructPage(csvDataGlobal.filter(d=>d.year=="2001"), document.documentElement.clientWidth, document.documentElement.clientHeight);
+            }, 3000)
+        });
+    </script>
+</body>
+
+</html>

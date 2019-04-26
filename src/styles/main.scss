@@ -1,0 +1,75 @@
+@import "normalize";
+
+* {
+  box-sizing: border-box;
+}
+
+body,
+html {
+  margin: 0px;
+  padding: 0px;
+  overflow: hidden;
+}
+
+svg {
+  overflow: hidden;
+}
+
+text {
+  font-size: 14px;
+  font-family: "Segoe UI";
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome and Opera */
+}
+
+text.label {
+  font-weight: 600;
+}
+
+text.yearText {
+  font-weight: 600;
+  fill: #999;
+}
+
+.tick text {
+  fill: #999;
+}
+
+.xAxis .tick:nth-child(2) text {
+  text-anchor: start;
+}
+
+.tick line {
+  shape-rendering: CrispEdges;
+  stroke: #dddddd;
+}
+
+.tick line.origin {
+  stroke: #aaaaaa;
+}
+
+path.domain {
+  display: none;
+}
+
+*::-webkit-scrollbar-track {
+  background-color: #f5f5f5;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background-color: #f5f5f5;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #bcbcbc;
+}

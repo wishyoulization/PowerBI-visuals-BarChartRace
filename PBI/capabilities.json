@@ -1,0 +1,125 @@
+{
+    "dataRoles": [
+        {
+            "name": "name",
+            "kind": "GroupingOrMeasure",
+            "displayName": "Name"
+        },
+        {
+            "name": "value",
+            "kind": "GroupingOrMeasure",
+            "displayName": "Value"
+        },
+        {
+            "name": "year",
+            "kind": "GroupingOrMeasure",
+            "displayName": "Period"
+        },
+        {
+            "name": "colour",
+            "kind": "GroupingOrMeasure",
+            "displayName": "Colour"
+        }
+    ],
+    "objects": {
+        "chartSettings": {
+            "displayName": "Custom Settings",
+            "properties": {
+                "config": {
+                    "type": {
+                        "text": true
+                    }
+                }
+            }
+        },
+        "displaySettings": {
+            "displayName": "Wishyoulization Settings",
+            "properties": {
+                "topN": {
+                    "type": {
+                        "integer": true
+                    }
+                },
+                "duration": {
+                    "type": {
+                        "integer": true
+                    }
+                },
+                "autoPlay": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "fontFamily": {
+                    "type": {
+                        "text": true
+                    }
+                },
+                "fontSize": {
+                    "type": {
+                        "integer": true
+                    }
+                },
+                "hideGrid": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "hideNumbers": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "hidePeriod": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "periodSize": {
+                    "type": {
+                        "integer": true
+                    }
+                }
+            }
+        }
+    },
+    "sorting": {
+        "default": {}
+    },
+    "dataViewMappings": [
+        {
+            "table": {
+                "rows": {
+                    "dataReductionAlgorithm": {
+                        "top": {
+                            "count": 30000
+                        }
+                    },
+                    "select": [
+                        {
+                            "for": {
+                                "in": "name"
+                            }
+                        },
+                        {
+                            "for": {
+                                "in": "value"
+                            }
+                        },
+                        {
+                            "for": {
+                                "in": "year"
+                            }
+                        },
+                        {
+                            "for": {
+                                "in": "colour"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "advancedEditModeSupport": 0
+}
