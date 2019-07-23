@@ -262,7 +262,7 @@ function updateChart() {
     return function (t) {
       var val = i(t);
       if (val > 1000000) {
-        this.textContent = sign + d3.format(".3~s")(val);
+        this.textContent = sign + d3.format(".3~s")(val).replace(/G/,"B");
       } else {
         this.textContent = sign + d3.format(",")(Math.round(val * 100) / 100);
       }
