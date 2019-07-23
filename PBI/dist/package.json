@@ -1,14 +1,14 @@
 {
-    "version": "1.0.0",
+    "version": "2.0.0",
     "author": {"name":"Wishyoulization","email":"yo@wishyoulization.com"},
     "resources": [
         {
             "resourceId": "rId0",
             "sourceType": 5,
-            "file": "resources/wishyoulizationbarchartrace.pbiviz.json"
+            "file": "resources/wishyoulizationbarchartrace2.pbiviz.json"
         }
     ],
-    "visual": {"name":"Animated Bar Chart Race","displayName":"Animated Bar Chart Race","guid":"wishyoulizationbarchartrace","visualClassName":"Visual","version":"1.0.0","description":"The familiar bar chart turns fascinating with a new trendy feature to animate bars racing to the top based on ranks.","supportUrl":"https://www.wishyoulization.com/powerbi","gitHubUrl":"https://github.com/wishyoulization/PowerBI-visuals-BarChartRace"},
+    "visual": {"name":"Animated Bar Chart Race","displayName":"Animated Bar Chart Race","guid":"wishyoulizationbarchartrace2","visualClassName":"Visual","version":"2.0.0","description":"The familiar bar chart turns fascinating with a new trendy feature to animate bars racing to the top based on ranks.","supportUrl":"https://www.wishyoulization.com/powerbi","gitHubUrl":"https://github.com/wishyoulization/PowerBI-visuals-BarChartRace"},
     "metadata": {
         "pbivizjson": {
             "resourceId": "rId0"

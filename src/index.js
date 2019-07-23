@@ -4,11 +4,11 @@ import "d3-selection-multi";
 import './styles/main.scss';
 
 var intervalKeeper;
-var top_n, tickDuration, brandData, width, height, yearSlice, autoPlay, fontFamily, fontSize, hideGrid, hideNumbers, hidePeriod,periodSize;
+var top_n, tickDuration, brandData, width, height, yearSlice, autoPlay, fontFamily, fontSize, hideGrid, hideNumbers, hidePeriod, periodSize, flipCroppedLabelsToRight, useFixedXaxisRange, minXaxisRange, maxXaxisRange;
 var svg, barPadding, yearSlice, x, y, xAxis, yearText;
 var initialFlag = false;
 const margin = {
-  top: 30, right: 8, bottom: 5, left: 10
+  top: 30, right: 8, bottom: 10, left: 10
 };
 
 
@@ -62,8 +62,10 @@ function updateChart() {
   svg.attr("width", width).attr("height", height)
   barPadding = (height - (margin.bottom + margin.top)) / (top_n * 5);
 
+  var xDomain = useFixedXaxisRange ? [minXaxisRange, maxXaxisRange] : [d3.min([0, d3.min(yearSlice, d => d.value)]), d3.max(yearSlice, d => d.value)]
+
   x = d3.scaleLinear()
-    .domain([0, d3.max(yearSlice, d => d.value)])
+    .domain(xDomain)
     .range([margin.left, width - margin.right - 65]);
   y = d3.scaleLinear()
     .domain([top_n, 0])
@@ -94,8 +96,8 @@ function updateChart() {
     .append('rect')
     .attrs({
       class: d => `bar ${d.name.replace(/\s/g, '_')}`,
-      x: x(0) + 1,
-      width: d => x(d.value) - x(0) - 1,
+      x: d => d.value > 0 ? x(0) : x(d.value),
+      width: d => d.value > 0 ? x(d.value) - x(0) : Math.abs(x(0) - x(d.value)),
       y: d => y(top_n + 1) + 5,
       height: y(1) - y(0) - barPadding
     })
@@ -106,6 +108,7 @@ function updateChart() {
     .duration(tickDuration)
     .ease(d3.easeLinear)
     .attrs({
+      x: d => d.value > 0 ? x(0) : x(d.value),
       y: d => y(d.rank) + 5
     });
 
@@ -114,7 +117,8 @@ function updateChart() {
     .duration(tickDuration)
     .ease(d3.easeLinear)
     .attrs({
-      width: d => x(d.value) - x(0) - 1,
+      x: d => d.value > 0 ? x(0) : x(d.value),
+      width: d => d.value > 0 ? x(d.value) - x(0) : Math.abs(x(0) - x(d.value)),
       y: d => y(d.rank) + 5,
       height: y(1) - y(0) - barPadding
     });
@@ -125,7 +129,8 @@ function updateChart() {
     .duration(tickDuration)
     .ease(d3.easeLinear)
     .attrs({
-      width: d => x(d.value) - x(0) - 1,
+      x: d => d.value > 0 ? x(0) : x(d.value),
+      width: d => d.value > 0 ? x(d.value) - x(0) : Math.abs(x(0) - x(d.value)),
       y: d => y(top_n + 1) + 5
     })
     .remove();
@@ -146,24 +151,46 @@ function updateChart() {
       "font-size": fontSize
     })
     .html(d => d.name)
-    .transition()
-    .duration(tickDuration)
-    .ease(d3.easeLinear)
-    .attrs({
-      y: d => y(d.rank) + 5 + ((y(1) - y(0)) / 2) + 1,
-    });
-
-  labels
-    .styles({
-      "font-family": fontFamily,
-      "font-size": fontSize
+    .attr('x', function (d) {
+      d.textWidth = this.getBoundingClientRect().width;
+      return x(d.value) - 8;
     })
     .transition()
     .duration(tickDuration)
     .ease(d3.easeLinear)
     .attrs({
-      x: d => x(d.value) - 8,
+      y: d => y(d.rank) + 5 + ((y(1) - y(0)) / 2) + 1,
+    })
+    .attr('x', function (d, i) {
+      var xval = x(d.value);
+      if (flipCroppedLabelsToRight && xval - 20 < d.textWidth) {
+        return x(d.value) + 45 + d.textWidth;
+      } else {
+        return x(d.value) - 8;
+      }
+    })
+
+  labels
+    .styles({
+      "font-family": fontFamily,
+      "font-size": fontSize,
+      "dummy": function (d) {
+        d.textWidth = this.getBoundingClientRect().width;
+      }
+    })
+    .transition()
+    .duration(tickDuration)
+    .ease(d3.easeLinear)
+    .attrs({
       y: d => y(d.rank) + 5 + ((y(1) - y(0)) / 2) + 1
+    })
+    .attr('x', function (d, i) {
+      var xval = x(d.value);
+      if (flipCroppedLabelsToRight && xval - 20 < d.textWidth) {
+        return x(d.value) + 45 + d.textWidth;
+      } else {
+        return x(d.value) - 8;
+      }
     })
 
   labels
@@ -229,14 +256,15 @@ function updateChart() {
 
   function valueLabelTextGen(d) {
     let oldValue = +d3.select(this).attr('oldValue') || 0
-    let i = d3.interpolateRound(oldValue, d.value);
+    let i = d.value < 10 ? d3.interpolate(Math.abs(oldValue), Math.abs(d.value)) : d3.interpolateRound(Math.abs(oldValue), Math.abs(d.value));
+    let sign = d.value > 0 ? '' : '-';
     d3.select(this).attr('oldValue', d.value);
     return function (t) {
       var val = i(t);
       if (val > 1000000) {
-        this.textContent = d3.format(".3~s")(val);
+        this.textContent = sign + d3.format(".3~s")(val);
       } else {
-        this.textContent = d3.format(",")(val);
+        this.textContent = sign + d3.format(",")(Math.round(val * 100) / 100);
       }
     };
   }
@@ -250,7 +278,7 @@ function updateChart() {
       "font-size": periodSize,
       display: hidePeriod ? "none" : "block"
     })
-    .text(~~yearSlice[0].year)
+    .text(yearSlice[0].yearLabel || ~~yearSlice[0].year)
 }
 
 function halo(text, strokeWidth) {
@@ -279,6 +307,10 @@ function updateVisual(data, config) {
   hideNumbers = config.hideNumbers;
   hidePeriod = config.hidePeriod;
   periodSize = config.periodSize;
+  flipCroppedLabelsToRight = config.flipCroppedLabelsToRight;
+  useFixedXaxisRange = config.useFixedXaxisRange;
+  minXaxisRange = config.minXaxisRange;
+  maxXaxisRange = config.maxXaxisRange;
 
   var listOfYears = {}
   data.map(d => listOfYears[d.year] = true)

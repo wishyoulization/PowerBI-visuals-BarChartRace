@@ -185,6 +185,10 @@ export class Visual implements IVisual {
             hideNumbers: this.getDisplaySettingsFromMetaData("hideNumbers") || false,
             hidePeriod: this.getDisplaySettingsFromMetaData("hidePeriod") || false,
             periodSize: (typeof this.getDisplaySettingsFromMetaData("periodSize") != "undefined") ? this.getDisplaySettingsFromMetaData("periodSize") : 64,
+            flipCroppedLabelsToRight: (typeof this.getDisplaySettingsFromMetaData("flipCroppedLabelsToRight") != "undefined") ? this.getDisplaySettingsFromMetaData("flipCroppedLabelsToRight") : true,
+            useFixedXaxisRange: (typeof this.getDisplaySettingsFromMetaData("useFixedXaxisRange") != "undefined") ? this.getDisplaySettingsFromMetaData("useFixedXaxisRange") : false,
+            minXaxisRange: (typeof this.getDisplaySettingsFromMetaData("minXaxisRange") != "undefined") ? +this.getDisplaySettingsFromMetaData("minXaxisRange") : "0",
+            maxXaxisRange: (typeof this.getDisplaySettingsFromMetaData("maxXaxisRange") != "undefined") ? +this.getDisplaySettingsFromMetaData("maxXaxisRange") : "100",
         };
         (window as any).constructPage(results.data, this.config);
         // (window as any).constructPage(results.data, { get: this.getConfig.bind(this), set: this.setConfig.bind(this), edit: options.editMode ? true : false });
@@ -212,6 +216,10 @@ export class Visual implements IVisual {
                         hideNumbers: this.config.hideNumbers,
                         hidePeriod: this.config.hidePeriod,
                         periodSize: this.config.periodSize,
+                        flipCroppedLabelsToRight: this.config.flipCroppedLabelsToRight,
+                        useFixedXaxisRange: this.config.useFixedXaxisRange,
+                        minXaxisRange: this.config.minXaxisRange,
+                        maxXaxisRange: this.config.maxXaxisRange,
                     },
                     validValues: {
                         topN: { numberRange: { min: 1, max: 20 } },
@@ -223,6 +231,10 @@ export class Visual implements IVisual {
                         hideNumbers: {},
                         hidePeriod: {},
                         periodSize: { numberRange: { min: 0, max: 80 } },
+                        flipCroppedLabelsToRight: {},
+                        useFixedXaxisRange: {},
+                        minXaxisRange: {},
+                        maxXaxisRange: {},
                     },
                     selector: null
                 });

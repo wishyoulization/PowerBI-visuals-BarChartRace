@@ -13,7 +13,12 @@
         {
             "name": "year",
             "kind": "GroupingOrMeasure",
-            "displayName": "Period"
+            "displayName": "Period (Numeric key)"
+        },
+        {
+            "name": "yearLabel",
+            "kind": "GroupingOrMeasure",
+            "displayName": "Period Label (Formatted text)"
         },
         {
             "name": "colour",
@@ -79,6 +84,26 @@
                     "type": {
                         "integer": true
                     }
+                },
+                "flipCroppedLabelsToRight": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "useFixedXaxisRange": {
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "minXaxisRange": {
+                    "type": {
+                        "text": true
+                    }
+                },
+                "maxXaxisRange": {
+                    "type": {
+                        "text": true
+                    }
                 }
             }
         }
@@ -114,6 +139,11 @@
                         {
                             "for": {
                                 "in": "colour"
+                            }
+                        },
+                        {
+                            "for": {
+                                "in": "yearLabel"
                             }
                         }
                     ]

@@ -16,9 +16,9 @@
     <svg id="chart"></svg>
     <script>
         var config = {
-            topN: 15,
-            duration: 2000,
-            width: 800,
+            topN: 25,
+            duration: 3000,
+            width: 700,
             height: 600,
             autoPlay: true,
             fontFamily: "Segoe UI",
@@ -27,6 +27,10 @@
             hideNumbers: false,
             hidePeriod: false,
             periodSize: 64,
+            flipCroppedLabelsToRight: true,
+            useFixedXaxisRange: false,
+            minXaxisRange: 0,
+            maxXaxisRange: 25000000
         }
         var csvDataGlobal;
         d3.csv('brand_data.csv', function (d, i) {
@@ -37,6 +41,11 @@
             return d;
         }, function (csvData) {
             csvData = csvData.filter(d => {
+                if (d.name == "GE" || d.name == "HP" || d.name == "Nike" || d.name == "Pepsi") {
+                    // d.value = d.value * -1
+                }
+                //d.value = getRandomArbitrary(-3, 3)
+                //d.yearLabel = "Prefix - " + d.year
                 return !d.year.match(/\./)
             })
             csvDataGlobal = csvData.splice(0, 300);
@@ -48,6 +57,10 @@
                 //constructPage(csvDataGlobal.filter(d=>d.year=="2001"), document.documentElement.clientWidth, document.documentElement.clientHeight);
             }, 3000)
         });
+
+        function getRandomArbitrary(min, max) {
+            return Math.random() * (max - min) + min;
+        }
     </script>
 </body>
 
