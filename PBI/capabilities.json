@@ -65,6 +65,11 @@
                         "integer": true
                     }
                 },
+                "fontColor": {
+                    "type": {
+                        "text": true
+                    }
+                },
                 "hideGrid": {
                     "type": {
                         "bool": true
