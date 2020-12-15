@@ -163,7 +163,7 @@ function updateChart() {
     .attr('x', function (d, i) {
       var xval = x(d.value);
       if (flipCroppedLabelsToRight && xval - 20 < d.textWidth) {
-        return x(d.value) + 45 + d.textWidth;
+        return x(d.value) + 55 + d.textWidth;
       } else {
         return x(d.value) - 8;
       }
@@ -187,7 +187,7 @@ function updateChart() {
     .attr('x', function (d, i) {
       var xval = x(d.value);
       if (flipCroppedLabelsToRight && xval - 20 < d.textWidth) {
-        return x(d.value) + 45 + d.textWidth;
+        return x(d.value) + 55 + d.textWidth;
       } else {
         return x(d.value) - 8;
       }
