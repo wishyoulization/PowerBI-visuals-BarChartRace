@@ -93,6 +93,7 @@ export class Visual implements IVisual {
     private dv: any;
 
     constructor(options: VisualConstructorOptions) {
+        console.log(options);
         this.config = {};
         this.host = options.host;
         this.colorPalette = options.host.colorPalette;
@@ -106,13 +107,15 @@ export class Visual implements IVisual {
     private getObjectFromDataView(dv) {
         let all = [];
         let fieldNames = [];
+        let names = [];
+        let periodValues = [];
 
         for (let c = 0; c < dv.table.columns.length; c++) {
             let currC = dv.table.columns[c];
             let field = d3.keys(currC.roles)[0];
             fieldNames.push(field);
         }
-
+        
         for (let r = 0; r < dv.table.rows.length; r++) {
             let currR = dv.table.rows[r];
             let item = {};
@@ -124,11 +127,68 @@ export class Visual implements IVisual {
                 item["colour"] = this.host.colorPalette.getColor(item["name"]).value;
             }
             all.push(item);
-        }
 
-        return {
-            data: all
-        };
+            //Add object to names array if it does nto exist in it
+            let found = names.find(element => element == item["name"]);
+            if(!found){
+                names.push(item["name"]);
+            }
+
+            found = periodValues.find(element => element.year == item["year"]);
+            if(!found){
+                let newTimeVal = {};
+                newTimeVal["year"] =item["year"];
+                if(item["yearLabel"]){
+                    newTimeVal["yearLabel"] =item["yearLabel"];
+                }
+                periodValues.push(newTimeVal);
+            }
+        }
+        console.log(dv.metadata.objects.displaySettings.cumulative);
+        if(!(dv.metadata.objects.displaySettings.cumulative)){
+            return {
+                data: all
+            };
+        }else{
+            //Change the dataset to cumulative
+            all.sort(function(a, b) {
+                return parseFloat(a.name) - parseFloat(b.name);
+            });
+            periodValues.sort(function(a, b) {
+                return parseFloat(a.year) - parseFloat(b.year);
+            });
+            let cumulativeAll =[];
+            let minYear = Math.min.apply(Math, all.map(function(o) { return o.year; }));
+            let maxYear = Math.max.apply(Math, all.map(function(o) { return o.year; }));
+            for (let i = 0; i < names.length; i++) {
+                for (let y = 0; y < periodValues.length; y++) {
+                    let found = all.find(x => x.name ==names[i] && x.year == periodValues[y].year);
+                    if (found){
+                        let perviousFound = cumulativeAll.find(x => x.name == names[i]);
+                        if(perviousFound){
+                            found.value = perviousFound.value + found.value;
+                            cumulativeAll.unshift(found);
+                        }else{
+                            cumulativeAll.unshift(found);
+                        }
+                    }else{
+                        let perviousFound = cumulativeAll.find(x => x.name == names[i]);
+                        if(perviousFound){
+                            let newEntry ={};
+                            Object.assign(newEntry, perviousFound);
+                            newEntry["year"] = periodValues[y].year;
+                            if(perviousFound.yearLabel){
+                                newEntry["yearLabel"] = periodValues[y].yearLabel;
+                            }
+                            cumulativeAll.unshift(newEntry);
+                        }
+                    }
+                }
+            }
+            return {
+                data: cumulativeAll
+            };
+        }
     }
 
     public getConfig() {
@@ -174,6 +234,7 @@ export class Visual implements IVisual {
         let results = this.getObjectFromDataView(options.dataViews[0]);
         // console.log(options, results);
         this.config = {
+            cumulative: this.getDisplaySettingsFromMetaData("cumulative") || false,
             topN: this.getDisplaySettingsFromMetaData("topN") || 10,
             duration: this.getDisplaySettingsFromMetaData("duration") || 1000,
             width: options.viewport.width,
@@ -208,6 +269,7 @@ export class Visual implements IVisual {
                     objectName: objectName,
                     displayName: "Wishyoulization Settings",
                     properties: {
+                        cumulative: this.config.cumulative, 
                         topN: this.config.topN,
                         duration: this.config.duration,
                         autoPlay: this.config.autoPlay,
@@ -224,6 +286,7 @@ export class Visual implements IVisual {
                         maxXaxisRange: this.config.maxXaxisRange,
                     },
                     validValues: {
+                        cumulatives: {},
                         topN: { numberRange: { min: 1, max: 20 } },
                         duration: { numberRange: { min: 0, max: 10000 } },
                         autoPlay: {},
