@@ -40,6 +40,11 @@
         "displaySettings": {
             "displayName": "Wishyoulization Settings",
             "properties": {
+                "cumulative": {
+                    "type": {
+                        "bool": true
+                    }
+                },
                 "topN": {
                     "type": {
                         "integer": true

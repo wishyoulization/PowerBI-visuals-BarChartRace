@@ -1,17 +1,17 @@
 
 import * as d3 from "d3";
+import { cumsum } from "d3";
 import "d3-selection-multi";
 import './styles/main.scss';
 
 var intervalKeeper;
-var top_n, tickDuration, brandData, width, height, yearSlice, autoPlay, fontFamily, fontSize, fontColor, hideGrid, hideNumbers, hidePeriod, periodSize, flipCroppedLabelsToRight, useFixedXaxisRange, minXaxisRange, maxXaxisRange;
+var cumulative, top_n, tickDuration, brandData, width, height, yearSlice, autoPlay, fontFamily, fontSize, fontColor, hideGrid, hideNumbers, hidePeriod, periodSize, flipCroppedLabelsToRight, useFixedXaxisRange, minXaxisRange, maxXaxisRange;
 var svg, barPadding, yearSlice, x, y, xAxis, yearText;
 var initialFlag = false;
 const margin = {
   top: 30, right: 8, bottom: 10, left: 10
 };
 
-console.log(brandData);
 
 function initialSetup() {
   if (initialFlag) {
@@ -298,8 +298,8 @@ function halo(text, strokeWidth) {
 
 function updateVisual(data, config) {
   clearInterval(intervalKeeper);
-
-  top_n = config.topN
+  cumulative = config.cumulative;
+  top_n = config.topN;
   tickDuration = config.duration;
   width = config.width;
   height = config.height;
