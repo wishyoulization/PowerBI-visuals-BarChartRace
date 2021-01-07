@@ -4,7 +4,7 @@
     "displayName": "Animated Bar Chart Race",
     "guid": "wishyoulizationbarchartrace2",
     "visualClassName": "Visual",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "description": "The familiar bar chart turns fascinating with a new trendy feature to animate bars racing to the top based on ranks.",
     "supportUrl": "https://www.wishyoulization.com/powerbi",
     "gitHubUrl": "https://github.com/wishyoulization/PowerBI-visuals-BarChartRace"

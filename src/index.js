@@ -1,10 +1,11 @@
 
 import * as d3 from "d3";
+import { cumsum } from "d3";
 import "d3-selection-multi";
 import './styles/main.scss';
 
 var intervalKeeper;
-var top_n, tickDuration, brandData, width, height, yearSlice, autoPlay, fontFamily, fontSize, hideGrid, hideNumbers, hidePeriod, periodSize, flipCroppedLabelsToRight, useFixedXaxisRange, minXaxisRange, maxXaxisRange;
+var cumulative, top_n, tickDuration, brandData, width, height, yearSlice, autoPlay, fontFamily, fontSize, fontColor, hideGrid, hideNumbers, hidePeriod, periodSize, flipCroppedLabelsToRight, useFixedXaxisRange, minXaxisRange, maxXaxisRange;
 var svg, barPadding, yearSlice, x, y, xAxis, yearText;
 var initialFlag = false;
 const margin = {
@@ -77,9 +78,6 @@ function updateChart() {
     .tickSize(-(height - margin.top - margin.bottom))
     .tickFormat(d => d3.format(',')(d));
 
-
-
-
   svg.select('.xAxis')
     .styles({
       display: hideGrid ? "none" : "block"
@@ -148,7 +146,8 @@ function updateChart() {
     })
     .styles({
       "font-family": fontFamily,
-      "font-size": fontSize
+      "font-size": fontSize,
+      "fill": fontColor
     })
     .html(d => d.name)
     .attr('x', function (d) {
@@ -164,7 +163,7 @@ function updateChart() {
     .attr('x', function (d, i) {
       var xval = x(d.value);
       if (flipCroppedLabelsToRight && xval - 20 < d.textWidth) {
-        return x(d.value) + 45 + d.textWidth;
+        return x(d.value) + 55 + d.textWidth;
       } else {
         return x(d.value) - 8;
       }
@@ -174,6 +173,7 @@ function updateChart() {
     .styles({
       "font-family": fontFamily,
       "font-size": fontSize,
+      "fill": fontColor, 
       "dummy": function (d) {
         d.textWidth = this.getBoundingClientRect().width;
       }
@@ -187,7 +187,7 @@ function updateChart() {
     .attr('x', function (d, i) {
       var xval = x(d.value);
       if (flipCroppedLabelsToRight && xval - 20 < d.textWidth) {
-        return x(d.value) + 45 + d.textWidth;
+        return x(d.value) + 55 + d.textWidth;
       } else {
         return x(d.value) - 8;
       }
@@ -254,6 +254,10 @@ function updateChart() {
     })
     .remove();
 
+    function getTextBox(selection) {
+      selection.each(function(d) { d.bbox = this.getBBox(); })
+  }
+
   function valueLabelTextGen(d) {
     let oldValue = +d3.select(this).attr('oldValue') || 0
     let i = d.value < 10 ? d3.interpolate(Math.abs(oldValue), Math.abs(d.value)) : d3.interpolateRound(Math.abs(oldValue), Math.abs(d.value));
@@ -294,8 +298,8 @@ function halo(text, strokeWidth) {
 
 function updateVisual(data, config) {
   clearInterval(intervalKeeper);
-
-  top_n = config.topN
+  cumulative = config.cumulative;
+  top_n = config.topN;
   tickDuration = config.duration;
   width = config.width;
   height = config.height;
@@ -303,6 +307,7 @@ function updateVisual(data, config) {
   autoPlay = config.autoPlay;
   fontFamily = config.fontFamily;
   fontSize = config.fontSize;
+  fontColor = config.fontColor;
   hideGrid = config.hideGrid;
   hideNumbers = config.hideNumbers;
   hidePeriod = config.hidePeriod;

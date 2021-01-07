@@ -15,6 +15,7 @@ This visual features a two phase build process for easy debugging, i.e. we first
 git clone https://github.com/wishyoulization/PowerBI-visuals-BarChartRace.git
 cd PowerBI-visuals-BarChartRace
 npm install
+npm run-script build
 cd PBI
 npm install
 npm run-script package

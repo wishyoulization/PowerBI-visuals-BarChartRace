@@ -40,6 +40,11 @@
         "displaySettings": {
             "displayName": "Wishyoulization Settings",
             "properties": {
+                "cumulative": {
+                    "type": {
+                        "bool": true
+                    }
+                },
                 "topN": {
                     "type": {
                         "integer": true
@@ -63,6 +68,11 @@
                 "fontSize": {
                     "type": {
                         "integer": true
+                    }
+                },
+                "fontColor": {
+                    "type": {
+                        "text": true
                     }
                 },
                 "hideGrid": {
